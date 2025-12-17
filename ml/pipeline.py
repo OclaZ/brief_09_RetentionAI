@@ -8,12 +8,10 @@ from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report, confusion_matrix, roc_auc_score
-from imblearn.over_sampling import SMOTE
+from imblearn.over_sampling import SMOTENC
 from imblearn.pipeline import Pipeline
 
-# -----------------------------------------------------------
-# 1. Chargement des données
-# -----------------------------------------------------------
+
 print("Chargement du fichier csv...")
 df = pd.read_csv('data.csv')
 
@@ -21,9 +19,6 @@ df = pd.read_csv('data.csv')
 colonnes_inutiles = ['EmployeeCount', 'Over18', 'StandardHours', 'EmployeeNumber']
 df = df.drop(colonnes_inutiles, axis=1)
 
-# -----------------------------------------------------------
-# 2. Préparation
-# -----------------------------------------------------------
 print("Préparation des colonnes...")
 
 # X = les données, y = la réponse (Attrition)
@@ -44,15 +39,12 @@ preprocessor = ColumnTransformer(
         ('cat', OneHotEncoder(handle_unknown='ignore'), colonnes_textes)
     ])
 
-# On sépare pour l'entrainement (80%) et le test (20%)
+
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
 
-# -----------------------------------------------------------
-# 3. Comparaison des modèles (Logistique vs Random Forest)
-# -----------------------------------------------------------
 print("\n--- Comparaison des modèles avec SMOTE ---")
 
-# J'essaie deux modèles pour voir lequel est le meilleur
+
 modeles = [
     ("Régression Logistique", LogisticRegression(max_iter=1000, random_state=42)),
     ("Random Forest", RandomForestClassifier(n_estimators=100, random_state=42))
@@ -65,10 +57,9 @@ meilleur_model = ""
 for nom, algo in modeles:
     print(f"Test de : {nom}...")
     
-    # On crée le pipeline : Nettoyage -> SMOTE -> Modèle
     pipeline = Pipeline(steps=[
         ('nettoyage', preprocessor),
-        ('equilibrage', SMOTE(random_state=42)),
+        ('equilibrage', SMOTENC(random_state=42 , categorical_features=[X.columns.get_loc(col) for col in colonnes_textes])),
         ('modele', algo)
     ])
     
@@ -87,16 +78,14 @@ for nom, algo in modeles:
 
 print(f"\nLe meilleur modèle est : {meilleur_model} avec un score de {meilleur_score:.4f}")
 
-# -----------------------------------------------------------
-# 4. Optimisation finale (GridSearch)
-# -----------------------------------------------------------
+
 print(f"\n--- Optimisation de {meilleur_model} ---")
 
-# On définit les paramètres à tester selon le gagnant
+
 if meilleur_model == "Random Forest":
     parametres = {
-        'modele__max_depth': [5, 10, None],   # Profondeur de l'arbre
-        'modele__min_samples_leaf': [2, 4]    # Minimum d'exemples par feuille
+        'modele__max_depth': [5, 10, None],   
+        'modele__min_samples_leaf': [2, 4]    
     }
 else:
     parametres = {'modele__C': [0.1, 1, 10]}
