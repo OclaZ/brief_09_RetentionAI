@@ -2,8 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Le reste de ton CSS (body, etc.) vient APRES */
+:root {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+}
+
 body {
-  background-color: #0f1115;
-  color: #ffffff;
+  color: var(--foreground);
+  background: var(--background);
+  font-family: var(--font-inter), sans-serif;
+  /* Motif de fond subtil (Grid) */
+  background-image: 
+    linear-gradient(to right, #202020 1px, transparent 1px),
+    linear-gradient(to bottom, #202020 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: center center;
+  /* Vignetage pour assombrir les bords */
+  box-shadow: inset 0 0 150px 50px #000;
+  min-height: 100vh;
+}
+
+/* Scrollbar invisible mais fonctionnelle */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
