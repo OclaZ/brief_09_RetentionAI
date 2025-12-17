@@ -1,0 +1,47 @@
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: retention_db
+    ports:
+      - "5432:5432"
+    env_file: .env  # Charge les variables (USER, PASSWORD, DB)
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./backend
+    container_name: retention_backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file: .env # Charge SECRET_KEY, ALGORITHM, GEMINI_API_KEY
+    environment:
+      # CRUCIAL : On remplace 'localhost' par 'db' pour Docker
+      # On construit l'URL complète ici pour que Python n'ait rien à faire
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:${POSTGRES_PORT}/${POSTGRES_DB}
+    volumes:
+      - ./backend:/app
+
+  frontend:
+    build: ./frontend
+    container_name: retention_frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+volumes:
+  postgres_data:

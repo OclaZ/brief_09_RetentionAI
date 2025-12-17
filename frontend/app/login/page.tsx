@@ -1,11 +1,12 @@
 "use client";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link"; // <--- IMPORT AJOUTÉ
 import axios from "axios";
-import { Card } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
-import { Lock, Sparkles, ArrowRight } from "lucide-react";
+import { Sparkles, ArrowRight } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -75,9 +76,16 @@ export default function LoginPage() {
               </div>
             </div>
             
-            <div className="mt-8 text-center">
-                <p className="text-xs text-gray-500">Protégé par cryptage de bout en bout</p>
+            {/* --- AJOUT DU LIEN VERS REGISTER ICI --- */}
+            <div className="mt-8 text-center pt-6 border-t border-white/5">
+                <p className="text-sm text-gray-400">
+                    Pas encore de compte ?{' '}
+                    <Link href="/register" className="text-brand-green hover:text-brand-purple font-bold transition-colors hover:underline">
+                        Créer un compte
+                    </Link>
+                </p>
             </div>
+
         </div>
       </div>
     </div>
