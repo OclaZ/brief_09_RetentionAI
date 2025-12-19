@@ -27,7 +27,7 @@ jobs:
       - name: Lancer Pytest
         env:
           DATABASE_URL: "sqlite:///:memory:" 
-          SECRET_KEY: "cle_de_test_bidon"
+          SECRET_KEY: "dlamw[mwpomqopdqdmomqwpdwqomdowqmdopwmqpodmwqpo0**"
           ALGORITHM: "HS256"
           ACCESS_TOKEN_EXPIRE_MINUTES: 30
           GEMINI_API_KEY: "fake_key"     
