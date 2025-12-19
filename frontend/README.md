@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
+  <br />
+  <img src="https://www.simplon.ma/images/Simplon_Maghreb_Rouge.png" alt="Simplon Maghreb Logo" width="300"/>
+  <br />
+  <h1>Documentation Frontend</h1>
+  <p><strong>Dashboard RH & Expérience Utilisateur</strong></p>
+  <br />
 
-## Getting Started
+  <div>
+    <img src="https://img.shields.io/badge/-Next.js_14-black?style=for-the-badge&logo=next.js&logoColor=white&color=000000" />
+    <img src="https://img.shields.io/badge/-TypeScript-black?style=for-the-badge&logo=typescript&logoColor=white&color=3178C6" />
+    <img src="https://img.shields.io/badge/-TailwindCSS-black?style=for-the-badge&logo=tailwindcss&logoColor=white&color=06B6D4" />
+    <img src="https://img.shields.io/badge/-Axios-black?style=for-the-badge&logo=axios&logoColor=white&color=5A29E4" />
+    <img src="https://img.shields.io/badge/-Lucide_Icons-black?style=for-the-badge&logo=lucide&logoColor=white&color=F56565" />
+  </div>
+</div>
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🖥️ 1. Interface Utilisateur (UI)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Le design suit une approche **"SaaS Premium"** avec un style **Glassmorphism**.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Charte Graphique
+- **Background** : Dégradé sombre profond (`#0a0a0a`) avec effet "Aurora" subtil.
+- **Cartes** : Transparence (`backdrop-blur-xl`), bordures fines blanches.
+- **Accents** : 
+  - 🟢 **Vert** (Safe/Stable) : Employé à faible risque.
+  - 🟣 **Violet** (AI/Risk) : Employé à risque / Actions IA.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Composants Réutilisables
+Nous utilisons une architecture de composants atomiques dans `components/ui/` :
+- `<Input />` : Champs de formulaire stylisés.
+- `<Button />` : Boutons avec états de chargement (spinners).
+- `<Card />` : Conteneurs effet verre.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 🧭 2. Parcours Utilisateur (UX)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Auth Guard** : Redirection automatique vers `/login` si aucun token n'est détecté.
+2. **Dashboard** :
+   - **Formulaire RH** : Saisie des données employés (30 champs).
+   - **Switchers** : Boutons Oui/Non ergonomiques.
+   - **Score en Temps Réel** : Jauge de risque animée.
+3. **Smart Feedback** :
+   - Si risque > 50%, le plan d'action Gemini s'affiche automatiquement avec une animation `slide-in`.
+4. **Historique** : Tableau des dernières analyses accessible en bas de page.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🛠️ 3. Stack Technique
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Next.js App Router
+Nous utilisons la dernière version de Next.js avec le dossier `app/`.
+- `app/layout.tsx` : Configuration globale (Polices, CSS).
+- `app/dashboard/page.tsx` : Logique métier (State, Effets).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Gestion d'État & API
+- **React Hooks** (`useState`, `useEffect`) pour gérer les données formulaire.
+- **Axios** pour les requêtes HTTP asynchrones vers FastAPI.
+- **LocalStorage** pour la persistance du Token JWT.
+
+### Docker Optimisé
+Le Frontend utilise une image **Node 20 Alpine** multi-stage build pour réduire la taille finale du conteneur et accélérer le déploiement.

@@ -1,114 +1,74 @@
-# FastAPI Project Template
+<div align="center">
+  <br />
+  <img src="https://www.simplon.ma/images/Simplon_Maghreb_Rouge.png" alt="Simplon Maghreb Logo" width="300"/>
+  <br />
+  <h1>Documentation Backend API</h1>
+  <p><strong>Architecture FastAPI & Base de Données</strong></p>
+  <br />
 
-This repository contains a ready-to-use FastAPI project template. It is intended to be used with the `fastapi_project_initializer` library to clone this template, create a virtual environment, and install dependencies automatically.
+  <div>
+    <img src="https://img.shields.io/badge/-FastAPI-black?style=for-the-badge&logo=fastapi&logoColor=white&color=009688" />
+    <img src="https://img.shields.io/badge/-Python_3.11-black?style=for-the-badge&logo=python&logoColor=white&color=3776AB" />
+    <img src="https://img.shields.io/badge/-PostgreSQL-black?style=for-the-badge&logo=postgresql&logoColor=white&color=4169E1" />
+    <img src="https://img.shields.io/badge/-SQLAlchemy-black?style=for-the-badge&logo=sqlalchemy&logoColor=white&color=D71F00" />
+    <img src="https://img.shields.io/badge/-Pytest-black?style=for-the-badge&logo=pytest&logoColor=white&color=0A9EDC" />
+  </div>
+</div>
 
-```
-By
-    ***   ***   ******   ******   ***********   ***********   **********   ***  ***
-    ***  **     ******   ******   ***********   ***     ***   **********   ***  ***
-    ******      *** *** *** ***   ***     ***   ***     ***   ***    ***   ***  ***
-    ******      ***   ***   ***   ***********   *********     ***    ***   ***  ***
-    ***  **     ***    *    ***   ***     ***   ***     **    **********    **  **
-    ***   ***   ***         ***   ***     ***   ***     ***   **********     ****
-```
+---
 
-## Contents
+## 🔌 1. Architecture de l'API
 
-- **main.py**: The main file for the FastAPI application.
-- **requirements.txt**: List of necessary dependencies for the project.
-- **.gitignore**: File to ignore certain files/folders in the git repository.
-- **Dockerfile**: File to build fastapi docker image
-- **/app**: Folder with other important files of the API.
-- **README.md**: This file.
+L'API est structurée en routers modulaires pour assurer la maintenabilité.
 
-## Manual Installation
-
-If you want to clone and set up this project manually, follow these steps:
-
-1. Clone the repository:
-    ```bash
-    git clone https://github.com/kmarov17/fastapi_default_structure.git
-    cd fastapi_default_structure
-    ```
-
-2. Create a virtual environment:
-    ```bash
-    python -m venv venv
-    ```
-
-3. Activate the virtual environment:
-
-    - On Windows:
-        ```bash
-        venv\Scripts\activate
-        ```
-
-    - On macOS/Linux:
-        ```bash
-        source venv/bin/activate
-        ```
-
-4. Install dependencies:
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-5. Run the application:
-    ```bash
-    python main.py
-    ```
-
-## Using with `fastapi_project_initializer`
-
-To initialize this project automatically using the `fastapi_project_initializer` library, follow these instructions:
-
-1. Install the `fastapi_project_initializer` library:
-    ```bash
-    pip install fastapi_project_initializer
-    ```
-
-2. Use the `fastapi-init` command to initialize a new project:
-    ```bash
-    fastapi-init project_name
-    ```
-
-This will do the following:
-- Clone this repository into a directory named `project_name`.
-- Create and activate a virtual environment.
-- Install the dependencies listed in `requirements.txt`.
-
-## Project Structure
-
-Here is a brief description of the main files and folders in this project template:
+### Structure des Dossiers
 
 ```
-my_fastapi_project/
-│
-├── app/
-│   ├── configs/           # Application configuration files
-│   ├── models/            # Data model files
-│   ├── routes/            # Routing (routes) files
-│   ├── services/          # Application service files
-│   |── utils/             # Utilities and tools
-|   └──tests/              # Unit test files for the application
-├── main.py                # Main application entry point
-├── requirements.txt       # File listing the Python dependencies
-├── .gitignore             # File to ignore specific files/folders in git
-├── Dockerfile             # File to build fastapi docker image
-└── README.md              # Project documentation
+
+backend/
+├── core/          # Config BDD, Sécurité (Hash, JWT)
+├── models/        # Modèles SQLAlchemy (Tables)
+├── routers/       # Endpoints (Auth, Predict, GenAI)
+├── schemas/       # Modèles Pydantic (Validation)
+├── tests/         # Tests unitaires (Pytest)
+└── main.py        # Point d'entrée
+
 ```
 
+---
 
-## Contributing
+## 🛡️ 2. Sécurité & Authentification
 
-Contributions are welcome! If you would like to improve this project, please follow these steps:
+- **OAuth2 & JWT** : Les endpoints sensibles (`/ml`, `/genai`) sont protégés. L'utilisateur doit fournir un Token Bearer obtenu via `/auth/login`.
+- **Hashing** : Les mots de passe sont hashés avec **Bcrypt** avant stockage.
+- **CORS** : Configuration stricte pour n'autoriser que le Frontend Next.js.
 
-1. Fork this repository.
-2. Create a new branch (`git checkout -b feature/my-new-feature`).
-3. Commit your changes (`git commit -am 'Add some feature'`).
-4. Push the branch (`git push origin feature/my-new-feature`).
-5. Open a Pull Request.
+---
 
-## License
+## 📡 3. Endpoints Principaux
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
+| Méthode | Endpoint | Description | Auth Requise |
+|---------|----------|-------------|--------------|
+| `POST` | `/auth/register` | Création de compte RH | ❌ |
+| `POST` | `/auth/login` | Connexion & Récupération Token | ❌ |
+| `POST` | `/ml/predict` | Analyse risque employé (ML) | ✅ |
+| `GET` | `/ml/history` | Historique des prédictions | ✅ |
+| `POST` | `/genai/plan` | Génération plan rétention | ✅ |
+
+---
+
+## 🧪 4. Tests & CI/CD
+
+Le backend dispose d'une suite de tests automatisés via **GitHub Actions**.
+
+- **Tests Auth** : Inscription, Login, Token invalide.
+- **Tests ML** : Vérification du chargement modèle, cohérence des probabilités.
+- **CI Pipeline** : À chaque push, une base de données temporaire est créée pour valider le code.
+
+```bash
+# Lancer les tests localement
+docker-compose exec backend pytest -v
+
+
+fix this one too
+```
