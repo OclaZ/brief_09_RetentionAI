@@ -69,6 +69,4 @@ Le backend dispose d'une suite de tests automatisés via **GitHub Actions**.
 # Lancer les tests localement
 docker-compose exec backend pytest -v
 
-
-fix this one too
 ```

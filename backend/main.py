@@ -10,7 +10,8 @@ app = FastAPI(title="RetentionAI API")
 
 origins = [
     "http://localhost:3000",      # Ton frontend Next.js
-    "http://127.0.0.1:3000",      # Variante IP
+    "http://127.0.0.1:3000",   
+    "*"   # Variante IP
 ]
 
 app.add_middleware(

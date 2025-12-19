@@ -62,7 +62,7 @@ def generate_retention_plan(
 
     try:
         # 4. Appel à Gemini
-        model = genai.GenerativeModel('gemini-pro') # ou gemini-1.5-flash
+        model = genai.GenerativeModel('gemini-2.5-flash') # ou gemini-1.5-flash
         response = model.generate_content(prompt)
         
         # 5. Nettoyage de la réponse (Parsing)
