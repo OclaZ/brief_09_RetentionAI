@@ -20,12 +20,12 @@ def test_model_prediction_consistency(client):
     assert login_res.status_code == 200, f"Login échoué: {login_res.text}"
     token = login_res.json()["access_token"]
     
-    # 3. Prédiction (Exemple)
-    # prediction_data = {
-    #     "feature1": 0.5,
-    #     "feature2": 1.2
-    # }
-    # headers = {"Authorization": f"Bearer {token}"}
-    # response = client.post("/predict", json=prediction_data, headers=headers)
+   # 3. Prédiction avec le modèle ML
+    prediction_data = {
+        "feature1": 0.5,
+        "feature2": 1.2
+    }
+    headers = {"Authorization": f"Bearer {token}"}
+    response = client.post("/predict", json=prediction_data, headers=headers)
     
-    # assert response.status_code == 200
+    assert response.status_code == 200

@@ -25,6 +25,6 @@ def test_genai_mocked_response(client):
     
     # 3. Test de la route protégée (Exemple)
     # Vous pouvez décommenter ceci une fois que votre route /genai/generate est prête
-    # headers = {"Authorization": f"Bearer {token}"}
-    # response = client.post("/genai/generate", json={"prompt": "test"}, headers=headers)
-    # assert response.status_code in [200, 201]
+    headers = {"Authorization": f"Bearer {token}"}
+    response = client.post("/genai/generate", json={"prompt": "test"}, headers=headers)
+    assert response.status_code in [200, 201]
